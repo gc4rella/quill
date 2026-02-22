@@ -1,0 +1,11 @@
+{
+  "name": "quill",
+  "description": "AI-powered book writing assistant for fiction and nonfiction. Guided setup, automatic outline generation, chapter-by-chapter writing with context compression, LaTeX or Markdown output, and non-linear revision support.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Giuseppe",
+    "url": "https://github.com/giuseppe/quill"
+  },
+  "repository": "https://github.com/giuseppe/quill",
+  "license": "MIT"
+}
