@@ -7,14 +7,14 @@ AI-powered book writing assistant for Claude Code. Write fiction, nonfiction, or
 Clone or download this plugin, then point Claude Code at it:
 
 ```bash
-git clone https://github.com/giuseppe/quill.git
+git clone https://github.com/gc4rella/quill.git
 claude --plugin-dir /path/to/quill
 ```
 
 Or install directly from GitHub:
 
 ```bash
-claude plugin install giuseppe/quill
+claude plugin install gc4rella/quill
 ```
 
 ## Start a New Book
@@ -48,6 +48,7 @@ Then start writing with `/quill:write 1`.
 | `/quill:threads` | Manage open plot threads or concept questions |
 | `/quill:character Name` | Add/update characters (fiction) or concepts (technical) |
 | `/quill:export` | Assemble manuscript — PDF, Markdown, DOCX, or HTML |
+| `/quill:format` | View or switch output format (LaTeX/Markdown) |
 
 ## Output Formats
 
@@ -61,7 +62,7 @@ Then start writing with `/quill:write 1`.
 - Export assembles `export/manuscript.md`
 - Optional conversion to DOCX or HTML via `pandoc`
 
-Choose your format during `/quill:init`. The choice is project-wide and consistent throughout.
+Choose your format during `/quill:init`. Switch later with `/quill:format`.
 
 ## Non-Linear Writing
 
@@ -102,4 +103,4 @@ your-book/
 
 ## License
 
-MIT
+Apache License 2.0 — see [LICENSE](LICENSE) for details.
