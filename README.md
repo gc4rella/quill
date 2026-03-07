@@ -1,8 +1,10 @@
 # Quill
 
-AI-powered book writing assistant for Claude Code. Write fiction, nonfiction, or technical books chapter by chapter with automatic context compression, non-linear revision support, and LaTeX or Markdown output.
+AI-powered book writing assistant for Claude Code and Codex. Write fiction, nonfiction, or technical books chapter by chapter with automatic context compression, non-linear revision support, and LaTeX or Markdown output.
 
 ## Install
+
+### Claude Code
 
 Clone or download this plugin, then point Claude Code at it:
 
@@ -17,7 +19,15 @@ Or install directly from GitHub:
 claude plugin install gc4rella/quill
 ```
 
+### Codex
+
+Install the bundled skill directory `skills/quill-context/` into `$CODEX_HOME/skills/quill-context/` (usually `~/.codex/skills/quill-context/`), or ask Codex to install the GitHub path `gc4rella/quill/skills/quill-context`.
+
+Then use the skill explicitly with `$quill-context`, or rely on auto-activation when you are inside a Quill project with a `quill.json` file.
+
 ## Start a New Book
+
+### Claude Code
 
 Run the guided setup wizard:
 
@@ -36,19 +46,32 @@ The wizard walks you through 6 phases:
 
 Then start writing with `/quill:write 1`.
 
-## Commands
+### Codex
 
-| Command | Description |
-|---------|-------------|
-| `/quill:init` | Guided setup wizard — run once to start a new book |
-| `/quill:write N` | Write chapter N using compressed context |
-| `/quill:revise N` | Revise an existing chapter with continuity tracking |
-| `/quill:status` | Bird's-eye view: progress, threads, revision log |
-| `/quill:outline` | View or edit the chapter outline |
-| `/quill:threads` | Manage open plot threads or concept questions |
-| `/quill:character Name` | Add/update characters (fiction) or concepts (technical) |
-| `/quill:export` | Assemble manuscript — PDF, Markdown, DOCX, or HTML |
-| `/quill:format` | View or switch output format (LaTeX/Markdown) |
+Ask for the same workflow directly. Examples:
+
+- `Use $quill-context to initialize a new fiction book in this folder.`
+- `Use $quill-context to write chapter 1 from the current outline.`
+- `Use $quill-context to revise chapter 3 and flag any downstream continuity impact.`
+- `Use $quill-context to export this manuscript to Markdown.`
+
+Codex uses the same Quill rules and file layout, but it does not expose `/quill:*` slash commands. The skill maps those intents onto bundled workflow references.
+
+## Commands / Intents
+
+In Claude Code these are slash commands. In Codex they are the corresponding requests you make to the `quill-context` skill.
+
+| Claude command | Codex intent | Description |
+|---------|-------------|-------------|
+| `/quill:init` | "Initialize a new Quill project" | Guided setup wizard — run once to start a new book |
+| `/quill:write N` | "Write chapter N" | Write chapter N using compressed context |
+| `/quill:revise N` | "Revise chapter N" | Revise an existing chapter with continuity tracking |
+| `/quill:status` | "Show Quill status" | Bird's-eye view: progress, threads, revision log |
+| `/quill:outline` | "Show or edit the outline" | View or edit the chapter outline |
+| `/quill:threads` | "Show or resolve open threads" | Manage open plot threads or concept questions |
+| `/quill:character Name` | "Update character/concept Name" | Add or update characters (fiction) or concepts (technical) |
+| `/quill:export` | "Export the manuscript" | Assemble manuscript — PDF, Markdown, DOCX, or HTML |
+| `/quill:format` | "Switch format to latex/markdown" | View or switch output format (LaTeX/Markdown) |
 
 ## Output Formats
 
@@ -62,17 +85,17 @@ Then start writing with `/quill:write 1`.
 - Export assembles `export/manuscript.md`
 - Optional conversion to DOCX or HTML via `pandoc`
 
-Choose your format during `/quill:init`. Switch later with `/quill:format`.
+Choose your format during project initialization. Switch later with `/quill:format` in Claude Code or by asking Codex to change the Quill format.
 
 ## Non-Linear Writing
 
 Quill is designed for non-linear work. You can:
 
 - **Write chapters out of order** — the briefing system handles context from summaries
-- **Revise any chapter at any time** — `/quill:revise` detects continuity impact and flags downstream chapters that may need updating
+- **Revise any chapter at any time** — Quill detects continuity impact and flags downstream chapters that may need updating
 - **Track open threads** — plot threads and concept questions are tracked automatically, with staleness warnings for threads open 5+ chapters
 
-After revising an earlier chapter, run `/quill:status` to see which later chapters may need attention.
+After revising an earlier chapter, check Quill status to see which later chapters may need attention.
 
 ## How Context Compression Works
 

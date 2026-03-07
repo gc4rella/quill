@@ -1,18 +1,38 @@
 ---
 name: quill-context
-description: Automatically activate when a quill.json file is present in the project, when the user mentions writing a book or chapter, or when working inside a Quill book writing project.
+description: Activate when a quill.json file is present or when the user wants to start, write, revise, outline, or export a book chapter-by-chapter with Quill.
 allowed-tools: Read, Write
 ---
 
 # Quill Context Skill
 
-This skill auto-activates when working inside a Quill book project. It enforces the compression contract, format awareness, and non-linear writing patterns that make Quill work.
+This skill works in both Claude Code and Codex. It enforces the compression contract, format awareness, and non-linear writing patterns that make Quill work.
+
+---
+
+## Codex Workflow Loading
+
+Codex does not expose Quill's `/quill:*` slash commands. When the user asks to do Quill work, translate the intent directly into the matching workflow from [`references/workflows.md`](references/workflows.md):
+
+- Start a new project or initialize Quill -> `Init Workflow`
+- Write a chapter -> `Write Workflow`
+- Revise a chapter -> `Revise Workflow`
+- Inspect progress -> `Status Workflow`
+- Edit or extend the outline -> `Outline Workflow`
+- Manage threads -> `Threads Workflow`
+- Manage characters or concepts -> `Character / Concept Workflow`
+- Switch between LaTeX and Markdown -> `Format Workflow`
+- Assemble or convert the manuscript -> `Export Workflow`
+
+Load only the workflow section needed for the current request. Treat that file as the Codex-facing equivalent of the Claude command set.
 
 ---
 
 ## Always Read quill.json First
 
-Before any action on a Quill project, read `quill.json`. It is the single source of truth for:
+Before any action on an existing Quill project, read `quill.json`. If it does not exist and the user wants to start a new book, use the `Init Workflow` from [`references/workflows.md`](references/workflows.md).
+
+For existing projects, `quill.json` is the single source of truth for:
 - Book metadata (title, type, format, structure)
 - Chapter outline and status
 - Chapter summaries (compressed context)
@@ -93,7 +113,7 @@ Quill.json grows as chapters are written. To keep it manageable, enforce these c
 
 ### When to compact
 
-Run compaction **after every `/quill:write` or `/quill:revise`** and whenever quill.json is updated.
+Run compaction **after every chapter write or revision** and whenever `quill.json` is updated.
 
 ### Compaction rules
 

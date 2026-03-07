@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quill Book Writing"
+  short_description: "Write books chapter-by-chapter with Quill workflows"
+  default_prompt: "Use $quill-context to initialize, write, revise, or export this Quill book project."
