@@ -78,7 +78,8 @@ In Claude Code these are slash commands. In Codex they are the corresponding req
 ### LaTeX
 - Chapters saved as `chapters/ch-NN.tex`
 - Wrapper file `book.tex` with preamble and `\input{}` entries
-- Export compiles to PDF with `pdflatex` (requires TeX Live)
+- Switching into LaTeX uses in-repo chapter conversion
+- Export can compile to PDF with `pdflatex` (requires TeX Live)
 
 ### Markdown
 - Chapters saved as `chapters/ch-NN.md`

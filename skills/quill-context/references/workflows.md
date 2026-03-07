@@ -335,19 +335,24 @@ Use when the user wants to inspect or switch between LaTeX and Markdown.
 - If unchanged, say so and stop
 - Warn that chapter files will be renamed and converted, `book.tex` may be created or removed, and `quill.json` will change
 - Wait for explicit confirmation
-4. Convert each chapter file:
+4. Convert each chapter file with a deterministic in-repo pass. Do not check for `pandoc` or `pdflatex` as part of format switching.
 - Markdown -> LaTeX:
   - add `\chapter{Title}`
-  - convert headings, bold, italics, inline code, code fences, and horizontal rules
-  - escape LaTeX special characters in prose
+  - convert headings, bold, italics, inline code, code fences, horizontal rules, lists, blockquotes, links, and footnotes when straightforward
+  - convert simple tables only when the structure is unambiguous; otherwise preserve the content and flag manual review
+  - escape LaTeX special characters in prose, but not inside commands or verbatim blocks
+  - preserve meaning for unsupported Markdown features instead of dropping content
 - LaTeX -> Markdown:
   - remove `\chapter{...}`
-  - convert headings, emphasis, inline code, verbatim blocks, and `\bigskip`
+  - convert headings, emphasis, inline code, verbatim blocks, `\bigskip`, lists, quote environments, links, and footnotes when straightforward
+  - flatten custom macros and unsupported environments conservatively, then flag manual review
   - unescape LaTeX special characters
+- Write all new target-format files first. Remove old source files only after the new set is complete.
+- If you need an assembled snapshot or scratch output during conversion, keep it under `export/`.
 5. If switching to `latex`, create `book.tex` with the standard wrapper and chapter `\input{}` lines.
 6. If switching to `markdown`, remove `book.tex` if present.
 7. Update `quill.json.format`.
-8. Report converted files and warn that complex markup may need manual review.
+8. Report converted files and warn that complex markup may need manual review. Only mention missing `pandoc` or `pdflatex` if the user also asked for an export target that needs them.
 
 ## Export Workflow
 
@@ -355,7 +360,7 @@ Use when the user wants the manuscript assembled or converted.
 
 1. Read `quill.json`.
 2. Verify every written or revised chapter in `outline` has a matching file.
-3. Branch on `format`.
+3. Branch on `format`. External tool checks belong here, not in the format-switch workflow.
 
 For `latex`:
 - Update `book.tex` to include `\input{chapters/ch-NN.tex}` for each existing written chapter

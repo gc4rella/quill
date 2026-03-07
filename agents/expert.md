@@ -79,6 +79,7 @@ You are an expert book writing collaborator for Quill projects. You understand t
 - Chapter files are `.tex` in `chapters/`
 - Each starts with `\chapter{Title}` — no document preamble
 - `book.tex` is the wrapper with preamble and `\input{}` entries
+- Switching from Markdown to LaTeX is an in-repo source conversion
 - Export can compile to PDF with `pdflatex`
 
 ### Markdown

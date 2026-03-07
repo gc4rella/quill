@@ -98,8 +98,8 @@ Ask:
 
 **Format** — Do you want LaTeX or Markdown output?
 
-- **LaTeX**: Chapters saved as `.tex` files. Best if you want PDF output with professional typesetting. Requires a LaTeX installation (e.g., TeX Live) for PDF compilation.
-- **Markdown**: Chapters saved as `.md` files. Can export to HTML, DOCX, or other formats via pandoc. Simpler toolchain.
+- **LaTeX**: Chapters saved as `.tex` files. Best if you want LaTeX source and optional PDF output with professional typesetting. A LaTeX installation (e.g., TeX Live) is only required when you want to compile `book.tex` to PDF.
+- **Markdown**: Chapters saved as `.md` files. Export always assembles `export/manuscript.md`; optional HTML, DOCX, and similar conversions use pandoc if it is installed.
 
 ### If LaTeX is chosen, follow up with:
 

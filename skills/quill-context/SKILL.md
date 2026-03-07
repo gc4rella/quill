@@ -51,12 +51,29 @@ Check `quill.json.format` to determine how to handle files:
 |---|---|---|
 | Chapter files | `chapters/ch-NN.tex` | `chapters/ch-NN.md` |
 | Chapter start | `\chapter{Title}` | No heading (added at export) |
-| Wrapper file | `book.tex` with `\input{}` | None (assembled at export) |
-| Export output | `book.pdf` via pdflatex | `export/manuscript.md` |
+| Assembled source output | `book.tex` with `\input{}` | `export/manuscript.md` |
+| Optional compiled output | `book.pdf` via `pdflatex` if available | `export/manuscript.docx` / `.html` via `pandoc` if available |
 | Character sheets | `characters/name.md` | `characters/name.md` |
 | Concept sheets | `concepts/name.md` | `concepts/name.md` |
 
 Never mix formats. If the project is LaTeX, all chapter operations use `.tex`. If Markdown, all use `.md`.
+
+## Toolchain Boundary
+
+Treat format conversion and export as separate operations:
+
+1. **Format switching (`markdown` <-> `latex`) is an in-repo source conversion.** It does not require `pandoc`, `pdflatex`, or any other external converter.
+2. **Export and compilation happen after the sources are in the right format.**
+   - LaTeX projects always maintain `book.tex`; PDF compilation is optional and depends on a LaTeX engine being installed.
+   - Markdown projects always maintain `export/manuscript.md`; DOCX/HTML conversion is optional and depends on `pandoc`.
+
+When external tools are missing, do not frame the format switch as blocked or degraded. Proceed with the deterministic in-repo conversion, handle supported markup explicitly, and call out only the constructs that may need manual cleanup.
+
+Keep generated artifacts separate from source files:
+
+- Source chapters live only in `chapters/` and must all share the active extension from `quill.json.format`.
+- Assembled manuscripts, temporary snapshots, and conversion intermediates belong under `export/`, never in `chapters/`.
+- After a successful switch, do not leave both `.md` and `.tex` versions of the same chapter in place.
 
 ---
 
@@ -178,9 +195,10 @@ project-root/
 │   └── ...
 └── export/
     ├── manuscript.md       ← assembled markdown (Markdown projects)
+    ├── ...                 ← optional conversion intermediates
     └── ...
 ```
 
 - Chapter files are zero-padded: `ch-01`, `ch-02`, ..., `ch-10`, `ch-11`
 - Character and concept sheet filenames are lowercase with hyphens: `elena-vasquez.md`, `memory-allocation.md`
-- The `export/` directory is for assembled output only — never put source files here
+- The `export/` directory is for assembled output and conversion intermediates — never put source files here

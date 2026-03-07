@@ -56,6 +56,8 @@ Wait for explicit confirmation before continuing.
 
 ## Step 5 — Convert Chapter Files
 
+This format switch is a deterministic in-repo source conversion. Do not check for `pandoc` or `pdflatex` here; those are only relevant if the user later asks for export targets such as PDF, DOCX, or HTML.
+
 List all chapter files in `chapters/`. For each file:
 
 ### Markdown to LaTeX (`.md` -> `.tex`)
@@ -69,9 +71,12 @@ List all chapter files in `chapters/`. For each file:
    - Convert `` `code` `` to `\texttt{code}`
    - Convert code blocks (triple backtick) to `\begin{verbatim}...\end{verbatim}`
    - Convert `---` horizontal rules to `\bigskip`
-   - Escape special LaTeX characters in prose: `&`, `%`, `$`, `#`, `_`, `{`, `}` (but not inside already-converted commands)
+   - Convert ordered and unordered lists to `enumerate` / `itemize`
+   - Convert blockquotes to `quote`
+   - Convert Markdown links to `\href{url}{text}` and footnotes to `\footnote{...}` when possible
+   - Convert simple pipe tables only if the structure is clear; otherwise preserve the content and flag it for manual review
+   - Escape special LaTeX characters in prose: `&`, `%`, `$`, `#`, `_`, `{`, `}` (but not inside already-converted commands or verbatim blocks)
 3. Write the converted content to the new `.tex` filename.
-4. Delete the old `.md` file.
 
 ### LaTeX to Markdown (`.tex` -> `.md`)
 
@@ -85,9 +90,14 @@ List all chapter files in `chapters/`. For each file:
    - Convert `\texttt{code}` to `` `code` ``
    - Convert `\begin{verbatim}...\end{verbatim}` to triple-backtick code blocks
    - Convert `\bigskip` to `---`
+   - Convert `itemize` / `enumerate` to Markdown lists, `quote` to blockquotes, `\href{...}{...}` to Markdown links, and `\footnote{...}` to Markdown footnotes when possible
+   - Flatten custom macros and unsupported environments conservatively, then flag them for manual review
    - Unescape LaTeX special characters: `\&` to `&`, `\%` to `%`, `\$` to `$`, `\#` to `#`, `\_` to `_`
 3. Write the converted content to the new `.md` filename.
-4. Delete the old `.tex` file.
+
+After all chapter files are converted successfully, remove the old source-format chapter files. Never leave both `.md` and `.tex` versions of the same chapter in place after a successful switch.
+
+If you need an assembled manuscript or conversion scratch file while switching formats, write it under `export/` so it stays separate from source chapters.
 
 ---
 
@@ -122,6 +132,7 @@ Summarize what was done:
 - Number of chapter files converted
 - Format switched from X to Y
 - Any files created or removed (`book.tex`)
+- Any chapters or constructs that need manual review
 - Remind the user: "Use `/quill:export` to assemble the manuscript in the new format."
 
 ---
