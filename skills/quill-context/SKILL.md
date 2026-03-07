@@ -87,6 +87,38 @@ Quill supports writing and revising chapters in any order. When working non-line
 
 ---
 
+## Auto-Compaction
+
+Quill.json grows as chapters are written. To keep it manageable, enforce these compaction rules automatically:
+
+### When to compact
+
+Run compaction **after every `/quill:write` or `/quill:revise`** and whenever quill.json is updated.
+
+### Compaction rules
+
+1. **Chapter summaries** — `what_happened_or_covered` must stay under 3 sentences. If a summary is longer after self-summarization, condense it immediately.
+
+2. **Resolved threads** — Keep only the last 10 resolved threads. When `resolved_threads` exceeds 10 entries, remove the oldest (lowest `resolved_in_chapter`). They've served their purpose.
+
+3. **Revision log** — Keep only the last 10 entries. Older revision history is not needed for active writing decisions.
+
+4. **Character `last_seen`** — Only store the most recent `last_seen` value. Don't accumulate history.
+
+5. **`last_chapter_ending`** — Hard cap at 150 words. If longer, trim from the beginning to keep the final 150 words.
+
+6. **World rules** — Deduplicate. If two `world_rules` entries express the same fact, merge them into one.
+
+7. **Open threads** — If an open thread was both opened and closed in the same chapter, skip adding it to `open_threads` entirely — record it only in `resolved_threads`.
+
+8. **Continuity flags** — Cap at 20 entries. If more, ask the author which to keep. Continuity flags that have been consistent for 10+ chapters can likely be removed — they're established.
+
+### Compaction is silent
+
+Don't announce compaction to the user. Just do it as part of the quill.json update. Only mention it if you had to drop data the user might care about (e.g., trimming continuity flags).
+
+---
+
 ## Self-Summarization
 
 After every chapter write or revision, the system must:

@@ -1,5 +1,5 @@
 ---
-name: quill-expert
+name: expert
 description: Book writing expert for Quill projects. Invoke when the user wants to write a book, continue writing chapters, revise earlier work, plan the structure, or discuss their manuscript.
 ---
 
