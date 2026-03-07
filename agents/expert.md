@@ -87,6 +87,12 @@ You are an expert book writing collaborator for Quill projects. You understand t
 - `export/manuscript.md` is the assembled output
 - Export can convert to DOCX/HTML with `pandoc`
 
+### Switching formats
+- `/quill:format` shows the current format
+- `/quill:format latex` or `/quill:format markdown` switches formats
+- Switching renames and converts chapter files, creates/removes `book.tex`, and updates `quill.json`
+- Complex markup (custom macros, math, HTML blocks) may need manual review after conversion
+
 ---
 
 ## Tone and Approach
@@ -112,3 +118,4 @@ You are an expert book writing collaborator for Quill projects. You understand t
 | `/quill:threads` | Manage open threads |
 | `/quill:character Name` | Add or update characters/concepts |
 | `/quill:export` | Assemble the manuscript |
+| `/quill:format` | View or switch output format (LaTeX/Markdown) |

@@ -204,6 +204,102 @@ Create a `book.tex` file with:
 
 Markdown projects don't need a wrapper file — `/quill:export` will concatenate chapters directly.
 
+### 5. Create `README.md` in the project directory
+
+Generate a `README.md` tailored to the chosen format:
+
+#### If LaTeX:
+
+```markdown
+# {Title}
+
+A book project powered by [Quill](https://github.com/gc4rella/quill).
+
+## Building the PDF
+
+This project uses LaTeX. To compile the manuscript to PDF:
+
+```bash
+pdflatex book.tex
+pdflatex book.tex   # run twice for table of contents
+```
+
+### Requirements
+
+- A LaTeX distribution (e.g., [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), or [MiKTeX](https://miktex.org/))
+- Packages used: `hyperref`, `geometry`, `fontenc`, `inputenc` (included in most distributions)
+
+### Project Structure
+
+- `quill.json` — project metadata and outline (single source of truth)
+- `book.tex` — LaTeX wrapper with preamble and chapter includes
+- `chapters/` — individual chapter files (`.tex`)
+- `export/` — compiled output
+
+## Quill Commands
+
+| Command | Description |
+|---------|-------------|
+| `/quill:write N` | Write chapter N |
+| `/quill:revise N` | Revise chapter N |
+| `/quill:status` | Progress overview |
+| `/quill:outline` | View or edit the outline |
+| `/quill:export` | Assemble and compile the manuscript |
+| `/quill:format` | Switch between LaTeX and Markdown |
+```
+
+#### If Markdown:
+
+```markdown
+# {Title}
+
+A book project powered by [Quill](https://github.com/gc4rella/quill).
+
+## Assembling the Manuscript
+
+Use the Quill export command to assemble all chapters into a single file:
+
+```
+/quill:export
+```
+
+This creates `export/manuscript.md`.
+
+### Converting to Other Formats
+
+With [pandoc](https://pandoc.org/) installed, you can convert the assembled manuscript:
+
+```bash
+# To DOCX
+pandoc export/manuscript.md -o export/manuscript.docx
+
+# To HTML
+pandoc export/manuscript.md -o export/manuscript.html --standalone
+
+# To PDF (requires LaTeX)
+pandoc export/manuscript.md -o export/manuscript.pdf
+```
+
+### Project Structure
+
+- `quill.json` — project metadata and outline (single source of truth)
+- `chapters/` — individual chapter files (`.md`)
+- `export/` — assembled manuscript output
+
+## Quill Commands
+
+| Command | Description |
+|---------|-------------|
+| `/quill:write N` | Write chapter N |
+| `/quill:revise N` | Revise chapter N |
+| `/quill:status` | Progress overview |
+| `/quill:outline` | View or edit the outline |
+| `/quill:export` | Assemble the manuscript |
+| `/quill:format` | Switch between LaTeX and Markdown |
+```
+
+Replace `{Title}` with the actual book title from Phase 1.
+
 ---
 
 ## Phase 6 — Auto-Generate Outline
