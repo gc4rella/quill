@@ -40,7 +40,7 @@ Read `chapter_summaries[N]` from quill.json. This is the current summary of the 
 
 ## Step 4: Load previous chapter ending
 
-If this is not chapter 1, read `last_chapter_ending` of chapter N-1 from the chapter summaries or, if N-1 is the most recently written chapter, from the `last_chapter_ending` field. This ensures the revised chapter still flows from the previous one.
+If this is not chapter 1, load the lightest continuity context that works: prefer the Chapter N-1 summary, use `last_chapter_ending` only when it actually belongs to Chapter N-1, and read only the closing passage of the Chapter N-1 file if prose-level handoff matters. Do not assume per-chapter endings are stored in `chapter_summaries`.
 
 ---
 

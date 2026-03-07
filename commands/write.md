@@ -52,11 +52,11 @@ Construct a compressed briefing **under 1500 tokens**. Include only:
 4. **Style fingerprint** — the voice guide (verbatim from quill.json)
 5. **Setting** — overall setting
 6. **Tone** — tone description
-7. **Active characters or concepts** — from `chapter_summaries` of the last 3 written chapters (not all characters — only those recently active)
+7. **Active characters or concepts** — from `chapter_summaries` of the 3 nearest prior written chapters by chapter number (not all characters, and never from later chapters unless the author asks)
 8. **Continuity flags** — from `continuity_flags` array
 9. **Open threads** — currently open threads relevant to this chapter
 10. **This chapter's outline** — the `brief` and `purpose` from the outline entry
-11. **Last chapter ending** — the `last_chapter_ending` field (verbatim final ~150 words of the previous chapter)
+11. **Last chapter ending** — use the `last_chapter_ending` field only when it belongs to the immediate predecessor; otherwise rely on the previous chapter summary and, if needed, read only that chapter's closing passage
 12. **Target word count** — from the outline entry's `target_words`
 
 **Do NOT load any full chapter files.** The briefing is your only context. This is the compression contract — it's what makes Quill work for long books.
@@ -75,7 +75,7 @@ Using the briefing as your guide, write the full chapter.
 **Writing guidelines:**
 - Match the `style_fingerprint` exactly — this is the voice
 - Honor the `tone`
-- Continue naturally from `last_chapter_ending` (if this isn't chapter 1)
+- Continue naturally from the strongest available handoff: `last_chapter_ending` when it belongs to the immediate predecessor, otherwise the previous chapter summary plus a short closing excerpt if needed
 - Fulfill the outline's `brief` and `purpose`
 - Hit the target word count (±10% is fine)
 - Introduce any new characters, concepts, or plot threads organically

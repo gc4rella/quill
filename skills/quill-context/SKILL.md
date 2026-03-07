@@ -1,6 +1,6 @@
 ---
 name: quill-context
-description: Activate when a quill.json file is present or when the user wants to start, write, revise, outline, or export a book chapter-by-chapter with Quill.
+description: Activate when a quill.json file is present or when the user wants to initialize, write, revise, inspect status, edit the outline, manage threads or characters or concepts, switch formats, or export a book project with Quill.
 allowed-tools: Read, Write
 ---
 
@@ -91,11 +91,11 @@ This is the core design principle that allows Quill to handle book-length works 
 
 4. **Chapter summaries are the memory.** After writing each chapter, self-summarize and store in `chapter_summaries`. This is how context is preserved without loading everything.
 
-5. **Active characters/concepts from last 3 chapters only.** Don't load all characters into the briefing — only those active in recent chapters.
+5. **Active characters/concepts from the 3 nearest prior written chapters only.** Don't load all characters into the briefing, and don't pull continuity from later chapters unless the user explicitly asks.
 
 ### What goes in a briefing:
 - Title, genre, POV, style_fingerprint, setting, tone
-- Active characters/concepts from last 3 chapters
+- Active characters/concepts from the 3 nearest prior written chapters
 - Continuity flags and relevant open threads
 - This chapter's outline brief and purpose
 - Last chapter ending (verbatim)
@@ -114,7 +114,7 @@ This is the core design principle that allows Quill to handle book-length works 
 
 Quill supports writing and revising chapters in any order. When working non-linearly:
 
-1. **Check `last_chapter_ending`** — If writing chapter 5 but `last_chapter_written` is 3, the `last_chapter_ending` refers to chapter 3, not chapter 4 (which doesn't exist yet). Handle gracefully.
+1. **Check `last_chapter_ending` carefully** — It only refers to the highest-numbered chapter written so far. If writing chapter 5 but `last_chapter_written` is 3, it refers to chapter 3, not chapter 4. If prose continuity from the immediate predecessor matters during out-of-order work, read only that chapter's closing passage instead of loading the full chapter.
 
 2. **Check `revision_log`** — If a chapter was revised, later chapters may have `status: "needs-revision"`. Alert the user to potential continuity issues.
 

@@ -186,11 +186,11 @@ Use when the user wants a new chapter drafted.
    - Style fingerprint
    - Setting
    - Tone
-   - Active characters or concepts from the last three written chapters
+   - Active characters or concepts from the three nearest prior written chapters by chapter number
    - Relevant continuity flags
    - Relevant open threads
    - This chapter's outline brief and purpose
-   - `last_chapter_ending`
+   - `last_chapter_ending` only when it belongs to the immediate predecessor; otherwise use the previous chapter summary and read only a short closing excerpt from the previous chapter file if prose continuity is necessary
    - Target word count
 7. Do not load full prior chapters unless the user explicitly asks. The briefing is the default context source.
 8. Write the chapter:
@@ -229,7 +229,7 @@ Use when the user wants to improve an existing chapter or refresh metadata after
 1. Read `quill.json`.
 2. Resolve the chapter path from the current format and read the full chapter.
 3. Read the existing chapter summary from `chapter_summaries[N]`.
-4. If this is not chapter 1, load the previous chapter ending needed for continuity.
+4. If this is not chapter 1, load the lightest continuity context that works: prefer the previous chapter summary, use `last_chapter_ending` only when it belongs to chapter `N-1`, and read only the closing passage of the previous chapter file if prose-level handoff matters.
 5. Offer one of these modes:
 - Suggest revisions only
 - Rewrite a section
