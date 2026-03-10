@@ -34,7 +34,14 @@ Determine the file path based on format:
 - LaTeX: `chapters/ch-{NN}.tex` (zero-padded, e.g., `ch-01.tex`)
 - Markdown: `chapters/ch-{NN}.md`
 
-If the file already exists, warn the user:
+If the file already exists, inspect it before warning the user.
+
+If it still matches the Quill stub placeholder, treat it as a placeholder and overwrite it without asking:
+
+- Markdown stub marker: `<!-- quill:chapter-stub -->`
+- LaTeX stub marker: `% quill:chapter-stub`
+
+If it contains drafted prose, warn the user:
 
 > "Chapter N already exists at `chapters/ch-NN.{ext}`. Overwrite it? If you want to revise instead, use `/quill:revise N`."
 

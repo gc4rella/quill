@@ -41,8 +41,8 @@ The wizard walks you through 6 phases:
 2. **Book-type questions** — genre, structure, characters (fiction) or thesis, prerequisites (technical)
 3. **Output format** — LaTeX or Markdown
 4. **Style fingerprint** — derives a one-line voice guide from your influences
-5. **Project setup** — creates `quill.json`, directories, and format files
-6. **Auto-generated outline** — complete chapter-by-chapter plan you can review and adjust
+5. **Project setup** — creates `quill.json`, directories, format files, and a reusable chapter scaffold helper
+6. **Auto-generated outline** — complete chapter-by-chapter plan you can review and adjust, then materializes chapter stubs
 
 Then start writing with `/quill:write 1`.
 
@@ -78,11 +78,13 @@ In Claude Code these are slash commands. In Codex they are the corresponding req
 ### LaTeX
 - Chapters saved as `chapters/ch-NN.tex`
 - Wrapper file `book.tex` with preamble and `\input{}` entries
+- `scripts/quill-sync-outline.py` keeps placeholder chapter files aligned with the outline
 - Switching into LaTeX uses in-repo chapter conversion
 - Export can compile to PDF with `pdflatex` (requires TeX Live)
 
 ### Markdown
 - Chapters saved as `chapters/ch-NN.md`
+- `scripts/quill-sync-outline.py` keeps placeholder chapter files aligned with the outline
 - Export assembles `export/manuscript.md`
 - Optional conversion to DOCX or HTML via `pandoc`
 
@@ -119,6 +121,8 @@ your-book/
 │   ├── ch-01.tex or .md
 │   ├── ch-02.tex or .md
 │   └── ...
+├── scripts/
+│   └── quill-sync-outline.py
 ├── characters/             ← fiction: detailed character sheets
 ├── concepts/               ← technical: detailed concept sheets
 └── export/

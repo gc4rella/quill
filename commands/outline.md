@@ -55,6 +55,8 @@ Show the full entry, then ask:
 
 Apply the requested changes and save to `quill.json`.
 
+If the matching chapter file is still a Quill stub, refresh it after saving. If `scripts/quill-sync-outline.py` exists, use it when shell execution is available; otherwise recreate the same stub content directly. Never overwrite a non-stub chapter file.
+
 If the chapter has already been written (`status: "written"` or `"revised"`), warn:
 
 > "This chapter has already been written. Changing the outline entry won't change the chapter text — use `/quill:revise N` to revise the actual chapter."
@@ -73,6 +75,8 @@ Create the new outline entry with `status: "planned"` and save to `quill.json`.
 
 If the new chapter number is beyond the current `structure.chapter_count`, update `chapter_count` and recalculate `target_word_count` accordingly.
 
+After saving, create or refresh the matching chapter stub file. If `scripts/quill-sync-outline.py` exists, use it when shell execution is available; otherwise recreate the same stub content directly. Never overwrite a non-stub chapter file.
+
 After saving, confirm:
 
-> "Chapter N added to the outline. Use `/quill:write N` when you're ready to write it."
+> "Chapter N added to the outline and the chapter stub is ready. Use `/quill:write N` when you're ready to write it."

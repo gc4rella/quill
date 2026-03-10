@@ -186,11 +186,27 @@ Fill in all fields from the collected answers. Leave `outline` empty for now —
 
 - `chapters/` — where chapter files will be saved
 - `export/` — where assembled manuscripts will go
+- `scripts/` — helper utilities that keep the chapter scaffold aligned with the outline
 
 For fiction: also create `characters/` directory.
 For technical/nonfiction: also create `concepts/` directory.
 
-### 3. If LaTeX format: create `book.tex`
+### 3. Create `scripts/quill-sync-outline.py`
+
+Create `scripts/quill-sync-outline.py` in the project root. Copy the bundled template from `../skills/quill-context/templates/quill-sync-outline.py` when available. The script should:
+
+- Read `quill.json`
+- Look at `outline` and `format`
+- Create missing chapter stub files in `chapters/`
+- Refresh only files that still match the Quill stub placeholder
+- Never overwrite drafted chapter prose
+
+Use these stub markers so later write steps can replace placeholders automatically:
+
+- Markdown: `<!-- quill:chapter-stub -->`
+- LaTeX: `% quill:chapter-stub`
+
+### 4. If LaTeX format: create `book.tex`
 
 Create a `book.tex` file with:
 - Document class and options from Phase 3
@@ -200,11 +216,11 @@ Create a `book.tex` file with:
 - Comment placeholder: `% Chapter \input{} lines will be added by /quill:export`
 - `\end{document}`
 
-### 4. If Markdown format: create no additional files
+### 5. If Markdown format: create no additional wrapper files
 
 Markdown projects don't need a wrapper file — `/quill:export` will concatenate chapters directly.
 
-### 5. Create `README.md` in the project directory
+### 6. Create `README.md` in the project directory
 
 Generate a `README.md` tailored to the chosen format:
 
@@ -234,7 +250,18 @@ pdflatex book.tex   # run twice for table of contents
 - `quill.json` — project metadata and outline (single source of truth)
 - `book.tex` — LaTeX wrapper with preamble and chapter includes
 - `chapters/` — individual chapter files (`.tex`)
+- `scripts/quill-sync-outline.py` — refreshes placeholder chapter files from the outline
 - `export/` — compiled output
+
+## Create or Refresh Chapter Stubs
+
+When you add or change planned chapters in `quill.json`, regenerate placeholder chapter files with:
+
+```bash
+python3 scripts/quill-sync-outline.py
+```
+
+This only updates Quill stub files. Drafted chapters are left untouched.
 
 ## Quill Commands
 
@@ -284,7 +311,18 @@ pandoc export/manuscript.md -o export/manuscript.pdf
 
 - `quill.json` — project metadata and outline (single source of truth)
 - `chapters/` — individual chapter files (`.md`)
+- `scripts/quill-sync-outline.py` — refreshes placeholder chapter files from the outline
 - `export/` — assembled manuscript output
+
+## Create or Refresh Chapter Stubs
+
+When you add or change planned chapters in `quill.json`, regenerate placeholder chapter files with:
+
+```bash
+python3 scripts/quill-sync-outline.py
+```
+
+This only updates Quill stub files. Drafted chapters are left untouched.
 
 ## Quill Commands
 
@@ -349,6 +387,12 @@ Generate a complete chapter-by-chapter outline based on everything collected. Th
 2. Ask: "Does this outline work? You can adjust any chapter, add chapters, remove chapters, or restructure before we lock it in. You can also change the outline later with `/quill:outline`."
 3. Apply any requested changes.
 4. Save the final outline to `quill.json`.
+5. Create or refresh chapter stub files for every planned chapter. If shell execution is available, run `python3 scripts/quill-sync-outline.py`; otherwise create the same stub files directly.
+
+Stub rules:
+- Markdown stubs begin with `<!-- quill:chapter-stub -->`
+- LaTeX stubs begin with `% quill:chapter-stub`
+- Never overwrite any chapter file that already contains drafted prose
 
 ### Final message:
 
@@ -356,5 +400,6 @@ After saving, tell the author:
 - How many chapters are planned
 - Total target word count
 - Suggested first command: `/quill:write 1` to start writing Chapter 1
+- That the chapter stubs are ready and can be refreshed later with `python3 scripts/quill-sync-outline.py`
 - Mention `/quill:outline` to view or adjust the outline later
 - Mention `/quill:status` for a bird's-eye view at any time

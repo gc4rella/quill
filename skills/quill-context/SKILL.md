@@ -43,6 +43,20 @@ For existing projects, `quill.json` is the single source of truth for:
 
 ---
 
+## Initialization Contract
+
+When starting a new Quill project, always run the six-phase questionnaire from the `Init Workflow`. Do not infer the output format from context or taste; explicitly ask whether the project should use `latex` or `markdown`, then apply the format-specific setup.
+
+Every newly initialized project should include a reusable helper at `scripts/quill-sync-outline.py`. Copy the bundled template from [`templates/quill-sync-outline.py`](templates/quill-sync-outline.py) when possible. The helper reads `quill.json` and creates or refreshes chapter stub files without overwriting drafted chapters.
+
+Chapter stubs created by Quill must begin with a format-specific marker so later workflows can treat them as placeholders:
+- Markdown: `<!-- quill:chapter-stub -->`
+- LaTeX: `% quill:chapter-stub`
+
+If a chapter file still matches the Quill stub placeholder, the write workflow may replace it without asking for overwrite confirmation.
+
+---
+
 ## Format Awareness
 
 Check `quill.json.format` to determine how to handle files:
@@ -187,6 +201,8 @@ project-root/
 │   ├── ch-01.tex or .md    ← chapter files (zero-padded)
 │   ├── ch-02.tex or .md
 │   └── ...
+├── scripts/
+│   └── quill-sync-outline.py
 ├── characters/             ← fiction projects
 │   ├── character-name.md   ← detailed character sheets
 │   └── ...
@@ -201,4 +217,5 @@ project-root/
 
 - Chapter files are zero-padded: `ch-01`, `ch-02`, ..., `ch-10`, `ch-11`
 - Character and concept sheet filenames are lowercase with hyphens: `elena-vasquez.md`, `memory-allocation.md`
+- `scripts/quill-sync-outline.py` is safe to rerun after outline edits; it updates only stub chapter files
 - The `export/` directory is for assembled output and conversion intermediates — never put source files here

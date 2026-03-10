@@ -21,7 +21,7 @@ Read [../SKILL.md](../SKILL.md) first for the compression contract, compaction r
 Use when the user wants to start a new Quill book project.
 
 1. If `quill.json` already exists, warn before overwriting anything and wait for explicit confirmation.
-2. Run a structured interview in six phases. Ask all questions for a phase together, then wait.
+2. Run a structured interview in six phases. Ask all questions for a phase together, then wait. Do not assume the output format; Phase 3 must explicitly ask the author to choose `latex` or `markdown`.
 
 ### Phase 1: Foundation
 
@@ -124,8 +124,11 @@ Populate fields from the interview:
 Create:
 - `chapters/`
 - `export/`
+- `scripts/`
 - `characters/` for fiction
 - `concepts/` for nonfiction and technical
+
+Create `scripts/quill-sync-outline.py` in the project root. Copy the bundled helper from [`../templates/quill-sync-outline.py`](../templates/quill-sync-outline.py) when possible. This script reads `quill.json` and creates or refreshes chapter stub files without overwriting drafted chapters.
 
 If format is `latex`, create `book.tex` with:
 - The chosen document class and options
@@ -135,7 +138,7 @@ If format is `latex`, create `book.tex` with:
 - A placeholder comment for future chapter `\input{}` lines
 - `\end{document}`
 
-Create a project `README.md` that explains how to export the manuscript for the chosen format.
+Create a project `README.md` that explains how to export the manuscript for the chosen format and how to rerun `python3 scripts/quill-sync-outline.py` after outline changes.
 
 ### Phase 6: Auto-Generate Outline
 
@@ -166,6 +169,13 @@ Before saving:
 - Apply edits.
 - Save the final outline into `quill.json`.
 
+After saving the outline:
+- Create or refresh chapter stub files for every outline entry using `scripts/quill-sync-outline.py` or the same logic if shell execution is unavailable
+- Markdown stubs must begin with `<!-- quill:chapter-stub -->`
+- LaTeX stubs must begin with `% quill:chapter-stub`
+- Never overwrite a chapter file that already contains drafted prose
+- Report how many stubs were created or refreshed
+
 Close by reporting planned chapters, total target word count, and the most natural next action.
 
 ## Write Workflow
@@ -178,7 +188,9 @@ Use when the user wants a new chapter drafted.
 4. Determine the chapter path from `format`:
    - `latex` -> `chapters/ch-NN.tex`
    - `markdown` -> `chapters/ch-NN.md`
-5. If the chapter file already exists, ask before overwriting. If the user intends to modify it, use the `Revise Workflow`.
+5. If the chapter file already exists, inspect it before stopping:
+   - If it still matches the Quill stub placeholder (`<!-- quill:chapter-stub -->` for Markdown or `% quill:chapter-stub` for LaTeX), treat it as a placeholder and overwrite it without asking
+   - Otherwise ask before overwriting. If the user intends to modify it, use the `Revise Workflow`.
 6. Build a briefing under 1500 tokens from:
    - Title
    - Genre or book type
@@ -281,6 +293,10 @@ Use when the user wants to inspect, add, remove, or change outline entries.
 - Ask for the part if the project uses parts
 5. Save the updated outline.
 6. If the new chapter exceeds `structure.chapter_count`, update chapter count and target word count accordingly.
+7. Keep the chapter scaffold in sync:
+- If `scripts/quill-sync-outline.py` is present, run it when shell execution is available
+- Otherwise create or refresh only the affected stub chapter files directly
+- Never overwrite non-stub chapter files
 
 ## Threads Workflow
 
