@@ -1,4 +1,4 @@
 interface:
-  display_name: "Quill Book Writing"
-  short_description: "Draft, revise, track, format, and export books with Quill"
+  display_name: "Quill Book Studio"
+  short_description: "Plan, draft, revise, and export books with Quill"
   default_prompt: "Use $quill-context to manage this Quill book project: initialize it, write or revise chapters, inspect status, edit the outline, manage threads, switch formats, or export."
