@@ -74,7 +74,9 @@ def is_stub(content: str, fmt: str) -> bool:
 
 
 def latex_escape(value: str) -> str:
-    replacements = {
+    # Single-pass char substitution avoids double-escaping when backslash
+    # replacement introduces { and } that would be re-escaped in sequence.
+    special = {
         "\\": r"\textbackslash{}",
         "&": r"\&",
         "%": r"\%",
@@ -84,10 +86,7 @@ def latex_escape(value: str) -> str:
         "{": r"\{",
         "}": r"\}",
     }
-    escaped = value
-    for old, new in replacements.items():
-        escaped = escaped.replace(old, new)
-    return escaped
+    return "".join(special.get(c, c) for c in value)
 
 
 def one_line(value: object, default: str) -> str:

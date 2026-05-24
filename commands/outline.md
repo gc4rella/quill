@@ -1,7 +1,7 @@
 ---
 description: View the full chapter outline or add and update individual chapter entries.
 argument-hint: (optional) chapter number and title
-allowed-tools: Read, Write
+allowed-tools: Read, Write, Bash
 ---
 
 # Quill Outline

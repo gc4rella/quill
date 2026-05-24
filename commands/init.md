@@ -1,7 +1,7 @@
 ---
 description: Start a new Quill book project with a guided setup wizard. Collects all context needed to auto-generate a complete chapter outline. Run this once at the start of any new book.
 argument-hint: (optional) working title
-allowed-tools: Read, Write
+allowed-tools: Read, Write, Bash
 ---
 
 # Quill Init Wizard
@@ -226,7 +226,7 @@ Generate a `README.md` tailored to the chosen format:
 
 #### If LaTeX:
 
-```markdown
+~~~markdown
 # {Title}
 
 A book project powered by [Quill](https://github.com/gc4rella/quill).
@@ -273,11 +273,11 @@ This only updates Quill stub files. Drafted chapters are left untouched.
 | `/quill:outline` | View or edit the outline |
 | `/quill:export` | Assemble and compile the manuscript |
 | `/quill:format` | Switch between LaTeX and Markdown |
-```
+~~~
 
 #### If Markdown:
 
-```markdown
+~~~markdown
 # {Title}
 
 A book project powered by [Quill](https://github.com/gc4rella/quill).
@@ -334,7 +334,7 @@ This only updates Quill stub files. Drafted chapters are left untouched.
 | `/quill:outline` | View or edit the outline |
 | `/quill:export` | Assemble the manuscript |
 | `/quill:format` | Switch between LaTeX and Markdown |
-```
+~~~
 
 Replace `{Title}` with the actual book title from Phase 1.
 
