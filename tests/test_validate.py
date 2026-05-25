@@ -50,3 +50,52 @@ def test_migrate_is_idempotent(tmp_path):
     first = (root / "quill.json").read_text()
     validate.migrate(root)  # second run is a no-op
     assert (root / "quill.json").read_text() == first
+
+
+def _v2_project(tmp_path):
+    (tmp_path / "chapters").mkdir()
+    (tmp_path / ".quill" / "summaries").mkdir(parents=True)
+    quill = {
+        "schema_version": 2,
+        "format": "markdown",
+        "outline": [{"chapter": 1, "status": "written"}],
+        "open_threads": [],
+        "resolved_threads": [],
+    }
+    (tmp_path / "quill.json").write_text(json.dumps(quill), encoding="utf-8")
+    return tmp_path
+
+
+def test_validate_flags_missing_chapter_and_summary(tmp_path):
+    root = _v2_project(tmp_path)
+    errors = validate.validate(root)
+    assert any("ch-01.md is missing" in e for e in errors)
+    assert any("ch-01.json is missing" in e for e in errors)
+
+
+def test_validate_clean_project(tmp_path):
+    root = _v2_project(tmp_path)
+    (root / "chapters" / "ch-01.md").write_text("words", encoding="utf-8")
+    (root / ".quill" / "summaries" / "ch-01.json").write_text(
+        json.dumps({"chapter": 1}), encoding="utf-8"
+    )
+    assert validate.validate(root) == []
+
+
+def test_validate_flags_orphan_summary(tmp_path):
+    root = _v2_project(tmp_path)
+    (root / "chapters" / "ch-01.md").write_text("words", encoding="utf-8")
+    (root / ".quill" / "summaries" / "ch-01.json").write_text("{}", encoding="utf-8")
+    (root / ".quill" / "summaries" / "ch-09.json").write_text("{}", encoding="utf-8")
+    errors = validate.validate(root)
+    assert any("ch-09.json has no matching outline entry" in e for e in errors)
+
+
+def test_validate_flags_duplicate_open_thread_ids(tmp_path):
+    root = _v2_project(tmp_path)
+    (root / "chapters" / "ch-01.md").write_text("w", encoding="utf-8")
+    (root / ".quill" / "summaries" / "ch-01.json").write_text("{}", encoding="utf-8")
+    quill = json.loads((root / "quill.json").read_text())
+    quill["open_threads"] = [{"id": "x"}, {"id": "x"}]
+    (root / "quill.json").write_text(json.dumps(quill), encoding="utf-8")
+    assert any("duplicate ids" in e for e in validate.validate(root))
