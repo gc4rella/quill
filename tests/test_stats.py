@@ -24,3 +24,31 @@ def test_count_words_latex_strips_commands_and_comments():
     text = "\\chapter{Title}\n% a comment\nReal prose words here."
     # "Title" counts (1) + Real prose words here (4) = 5
     assert stats.count_words(text, "latex") == 5
+
+
+import json
+
+
+def _make_project(tmp_path):
+    (tmp_path / "chapters").mkdir()
+    quill = {
+        "format": "markdown",
+        "structure": {"target_word_count": 10},
+        "outline": [
+            {"chapter": 1, "status": "written"},
+            {"chapter": 2, "status": "planned"},
+        ],
+    }
+    (tmp_path / "quill.json").write_text(json.dumps(quill), encoding="utf-8")
+    (tmp_path / "chapters" / "ch-01.md").write_text("one two three four five", encoding="utf-8")
+    return tmp_path
+
+
+def test_gather_stats_counts_written_only(tmp_path):
+    root = _make_project(tmp_path)
+    result = stats.gather_stats(root)
+    assert result["total_words"] == 5
+    assert result["per_chapter"] == {1: 5, 2: 0}
+    assert result["chapters_written"] == 1
+    assert result["chapters_total"] == 2
+    assert result["progress_pct"] == 50.0
