@@ -2,7 +2,18 @@
 
 AI-powered book writing assistant for Claude Code and Codex. Write fiction, nonfiction, or technical books chapter by chapter with automatic context compression, non-linear revision support, and LaTeX or Markdown output.
 
+Quill is distributed as:
+
+- a Claude Code plugin with `/quill:*` slash commands
+- a Codex skill named `quill-context`
+
 ## Install
+
+### Requirements
+
+- Git, if installing from a checkout
+- Node.js/npm, if installing the Codex skill with `npx skills`
+- Claude Code or Codex, depending on the assistant you use
 
 ### Claude Code
 
@@ -21,41 +32,81 @@ claude plugin install gc4rella/quill
 
 ### Codex
 
-Install the bundled skill directory `skills/quill-context/` into `$CODEX_HOME/skills/quill-context/` (usually `~/.codex/skills/quill-context/`), or ask Codex to install the GitHub path `gc4rella/quill/skills/quill-context`.
+Install the `quill-context` skill globally with `npx skills`:
+
+```bash
+npx skills add gc4rella/quill --skill quill-context -g -a codex -y
+```
+
+To install from a local checkout instead:
+
+```bash
+git clone https://github.com/gc4rella/quill.git
+cd quill
+npx skills add . --skill quill-context -g -a codex -y
+```
+
+Restart Codex after installation so it discovers the new skill.
+
+Manual install is also supported: copy `skills/quill-context/` into `$CODEX_HOME/skills/quill-context/` (usually `~/.codex/skills/quill-context/`).
 
 Then use the skill explicitly with `$quill-context`, or rely on auto-activation when you are inside a Quill project with a `quill.json` file.
 
-## Start a New Book
+## Quick Start
 
 ### Claude Code
 
-Run the guided setup wizard:
+Create a project directory and run:
 
-```
+```bash
 /quill:init
 ```
 
-The wizard walks you through 6 phases:
+After the wizard creates the outline and chapter stubs, write the first chapter:
 
-1. **Foundation** — title, type (fiction/nonfiction/technical), premise, audience, length
-2. **Book-type questions** — genre, structure, characters (fiction) or thesis, prerequisites (technical)
-3. **Output format** — LaTeX or Markdown
-4. **Style fingerprint** — derives a one-line voice guide from your influences
-5. **Project setup** — creates `quill.json`, directories, format files, and a reusable chapter scaffold helper
-6. **Auto-generated outline** — complete chapter-by-chapter plan you can review and adjust, then materializes chapter stubs
+```bash
+/quill:write 1
+```
+
+### Codex
+
+Create a project directory, open it in Codex, and ask:
+
+```text
+Use $quill-context to initialize a new fiction book in this folder.
+```
+
+Then continue with chapter work:
+
+```text
+Use $quill-context to write chapter 1 from the current outline.
+```
+
+Codex uses the same Quill rules and file layout, but it does not expose `/quill:*` slash commands. The skill maps those intents onto bundled workflow references.
+
+## Guided Setup
+
+### Claude Code
+
+The initialization wizard walks you through 6 phases:
+
+1. **Foundation** - title, type (fiction/nonfiction/technical), premise, audience, length
+2. **Book-type questions** - genre, structure, characters (fiction) or thesis, prerequisites (technical)
+3. **Output format** - LaTeX or Markdown
+4. **Style fingerprint** - derives a one-line voice guide from your influences
+5. **Project setup** - creates `quill.json`, directories, format files, and a reusable chapter scaffold helper
+6. **Auto-generated outline** - complete chapter-by-chapter plan you can review and adjust, then materializes chapter stubs
 
 Then start writing with `/quill:write 1`.
 
 ### Codex
 
-Ask for the same workflow directly. Examples:
+Ask for the same workflow directly:
 
 - `Use $quill-context to initialize a new fiction book in this folder.`
 - `Use $quill-context to write chapter 1 from the current outline.`
 - `Use $quill-context to revise chapter 3 and flag any downstream continuity impact.`
 - `Use $quill-context to export this manuscript to Markdown.`
-
-Codex uses the same Quill rules and file layout, but it does not expose `/quill:*` slash commands. The skill maps those intents onto bundled workflow references.
 
 ## Commands / Intents
 
