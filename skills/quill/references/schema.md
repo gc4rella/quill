@@ -49,7 +49,7 @@ Canonical definition of the `quill.json` v2 schema, per-chapter summary files, v
 - `open_threads` / `resolved_threads` — each item must have a unique `id` string; the two sets must be disjoint.
 - `last_chapter_written` — the highest chapter number written so far (not the most recently touched).
 - `world_rules` — deduped; if two entries express the same fact, merge them.
-- `continuity_flags` — capped at 20; flags consistent for 10+ chapters can be removed.
+- `continuity_flags` — array of flag objects (see shape below), capped at 20. Always append new flags at the end.
 - `revision_log` — capped at 10 entries (oldest dropped).
 - `resolved_threads` — capped at 10 entries (oldest dropped).
 
@@ -92,6 +92,18 @@ Valid `status` values: `"planned"`, `"written"`, `"revised"`, `"needs-revision"`
   "introduced_in_chapter": 1
 }
 ```
+
+### Continuity flag entry shape
+
+```json
+{
+  "text": "Marta's scar is on her left cheek",
+  "added_in_chapter": 3
+}
+```
+
+- `added_in_chapter` — the chapter being written or revised when the flag was recorded. Compaction uses it to identify long-established flags (`last_chapter_written - added_in_chapter >= 10`) that are safe to auto-remove when over the cap.
+- Legacy plain-string entries are valid; treat them as `added_in_chapter: 0` and upgrade them to objects when touched.
 
 ### Thread entry shape
 

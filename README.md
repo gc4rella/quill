@@ -5,7 +5,7 @@ AI-powered book writing assistant for Claude Code and Codex. Write fiction, nonf
 Quill is distributed as:
 
 - a Claude Code plugin with `/quill:*` slash commands
-- a Codex skill named `quill-context`
+- a Codex skill named `quill`
 
 ## Install
 
@@ -32,10 +32,10 @@ claude plugin install gc4rella/quill
 
 ### Codex
 
-Install the `quill-context` skill globally with `npx skills`:
+Install the `quill` skill globally with `npx skills`:
 
 ```bash
-npx skills add gc4rella/quill --skill quill-context -g -a codex -y
+npx skills add gc4rella/quill --skill quill -g -a codex -y
 ```
 
 To install from a local checkout instead:
@@ -43,14 +43,14 @@ To install from a local checkout instead:
 ```bash
 git clone https://github.com/gc4rella/quill.git
 cd quill
-npx skills add . --skill quill-context -g -a codex -y
+npx skills add . --skill quill -g -a codex -y
 ```
 
 Restart Codex after installation so it discovers the new skill.
 
-Manual install is also supported: copy `skills/quill-context/` into `$CODEX_HOME/skills/quill-context/` (usually `~/.codex/skills/quill-context/`).
+Manual install is also supported: copy `skills/quill/` into `$CODEX_HOME/skills/quill/` (usually `~/.codex/skills/quill/`).
 
-Then use the skill explicitly with `$quill-context`, or rely on auto-activation when you are inside a Quill project with a `quill.json` file.
+Then use the skill explicitly with `$quill`, or rely on auto-activation when you are inside a Quill project with a `quill.json` file.
 
 ## Quick Start
 
@@ -73,13 +73,13 @@ After the wizard creates the outline and chapter stubs, write the first chapter:
 Create a project directory, open it in Codex, and ask:
 
 ```text
-Use $quill-context to initialize a new fiction book in this folder.
+Use $quill to initialize a new fiction book in this folder.
 ```
 
 Then continue with chapter work:
 
 ```text
-Use $quill-context to write chapter 1 from the current outline.
+Use $quill to write chapter 1 from the current outline.
 ```
 
 Codex uses the same Quill rules and file layout, but it does not expose `/quill:*` slash commands. The skill maps those intents onto bundled workflow references.
@@ -103,14 +103,14 @@ Then start writing with `/quill:write 1`.
 
 Ask for the same workflow directly:
 
-- `Use $quill-context to initialize a new fiction book in this folder.`
-- `Use $quill-context to write chapter 1 from the current outline.`
-- `Use $quill-context to revise chapter 3 and flag any downstream continuity impact.`
-- `Use $quill-context to export this manuscript to Markdown.`
+- `Use $quill to initialize a new fiction book in this folder.`
+- `Use $quill to write chapter 1 from the current outline.`
+- `Use $quill to revise chapter 3 and flag any downstream continuity impact.`
+- `Use $quill to export this manuscript to Markdown.`
 
 ## Commands / Intents
 
-In Claude Code these are slash commands. In Codex they are the corresponding requests you make to the `quill-context` skill.
+In Claude Code these are slash commands. In Codex they are the corresponding requests you make to the `quill` skill.
 
 | Claude command | Codex intent | Description |
 |---------|-------------|-------------|
@@ -156,24 +156,30 @@ After revising an earlier chapter, check Quill status to see which later chapter
 Writing a full book exceeds any LLM's context window. Quill solves this with a compression contract:
 
 1. **After writing each chapter**, Quill self-summarizes: what happened, new characters/concepts, threads opened/closed, emotional beats, word count.
-2. **Summaries are stored in `quill.json`**, not raw prose. Only the last ~150 words of the most recent chapter are kept verbatim (for prose continuity).
-3. **When writing the next chapter**, Quill builds a briefing under 1500 tokens from summaries, style fingerprint, active characters, open threads, and the chapter's outline brief.
+2. **Each summary is stored in its own file** under `.quill/summaries/ch-NN.json`, not raw prose. Every summary keeps an `ending_excerpt` — the chapter's final ~150 words verbatim — for prose continuity.
+3. **When writing the next chapter**, Quill builds a briefing under 1500 tokens from `quill.json` plus only the 3 nearest prior chapter summaries, the style fingerprint, active characters, open threads, and the chapter's outline brief.
 4. **No full chapter is ever loaded** unless you're actively revising it.
 
 This means chapter 20 writes with the same quality of context as chapter 2 — the compression scales to any book length.
+
+Existing projects created before schema v2 migrate automatically on first use, or manually via `python3 scripts/quill-validate.py --migrate`.
 
 ## Project Structure
 
 ```
 your-book/
-├── quill.json              ← single source of truth
+├── quill.json              ← single source of truth (schema v2)
+├── .quill/
+│   └── summaries/          ← per-chapter summaries + ending excerpts (commit this)
 ├── book.tex                ← LaTeX wrapper (LaTeX projects only)
 ├── chapters/
 │   ├── ch-01.tex or .md
 │   ├── ch-02.tex or .md
 │   └── ...
 ├── scripts/
-│   └── quill-sync-outline.py
+│   ├── quill-sync-outline.py   ← refresh chapter stubs from the outline
+│   ├── quill-validate.py       ← validate the project / migrate v1 → v2
+│   └── quill-stats.py          ← accurate word counts and progress
 ├── characters/             ← fiction: detailed character sheets
 ├── concepts/               ← technical: detailed concept sheets
 └── export/

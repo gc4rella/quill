@@ -7,7 +7,7 @@ from pathlib import Path
 from types import ModuleType
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-TEMPLATES = REPO_ROOT / "skills" / "quill-context" / "templates"
+TEMPLATES = REPO_ROOT / "skills" / "quill" / "templates"
 
 
 def load_script(filename: str) -> ModuleType:
