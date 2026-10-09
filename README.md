@@ -151,6 +151,18 @@ Quill is designed for non-linear work. You can:
 
 After revising an earlier chapter, check Quill status to see which later chapters may need attention.
 
+## Natural Prose
+
+Chapter drafting and prose revision include an editorial pass inspired by [Humanizer](https://github.com/blader/humanizer). Quill checks for formulaic phrasing while keeping the author's voice. The pass respects chapter continuity, factual content, technical markup, and the requested revision scope. It runs before chapter summaries and word counts are updated, with the same behavior in Claude Code and Codex. No separate skill installation is needed.
+
+To humanize an existing chapter, use `/quill:revise 3` with instructions to clean up its prose, or ask Codex:
+
+```text
+Use $quill to humanize chapter 3, preserving its voice and events.
+```
+
+Suggestions-only requests leave files unchanged. Metadata refresh, format switching, and export do not rewrite prose.
+
 ## How Context Compression Works
 
 Writing a full book exceeds any LLM's context window. Quill solves this with a compression contract:

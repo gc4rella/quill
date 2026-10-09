@@ -12,13 +12,37 @@ Read [../SKILL.md](../SKILL.md) first for the compression contract, compaction r
 
 - Start a new Quill project -> `Init Workflow`
 - Write chapter `N` -> `Write Workflow`
-- Revise chapter `N` -> `Revise Workflow`
+- Revise or humanize chapter `N` -> `Revise Workflow`
 - Show progress, threads, or revision risk -> `Status Workflow`
 - View or edit the outline -> `Outline Workflow`
 - View or resolve open threads -> `Threads Workflow`
 - Add or update characters or concepts -> `Character / Concept Workflow`
 - Switch between LaTeX and Markdown -> `Format Workflow`
 - Assemble or convert the manuscript -> `Export Workflow`
+
+## Prose Quality Pass
+
+Apply to new chapter drafts and requested prose revisions on both platforms. Inspired by [Humanizer](https://github.com/blader/humanizer/blob/main/SKILL.md), adapted here for book work. These are editorial checks, not an AI-authorship test.
+
+### Editorial principles
+
+- Match the author's supplied sample and voice choices; preserve personality, humor, uncertainty, and intentional rhythm.
+- Look for empty contrasts, repeated sentence openings, forced triads, dash-heavy prose, staged introductions, and closers that merely explain what a passage already showed. Edit mechanical patterns, not every occurrence.
+- Replace inflated significance, sales language, vague authority, stock vocabulary, and shallow commentary with clear supported meaning. Keep useful qualifications and technical terms.
+- Remove chatbot wrappers and decorative formatting. Preserve quotations, code, commands, paths, data, and link targets during prose cleanup.
+- Audit the rewrite for remaining patterns and changed meaning, then refine awkward passages. Do not add facts or citations to make text sound specific.
+
+### Book-specific boundaries
+
+Use `style_fingerprint`, POV, tense, tone, and the current chapter brief as the voice constraints. Use a supplied sample already available for this task; do not reread other chapters to obtain one. Intentional repetition, lyrical language, dialogue fragments, and punctuation may serve a scene or narrator. Preserve them when they fit the author's voice. Do not impose a punctuation blacklist or add slang, personal anecdotes, or first-person narration as a generic remedy.
+
+For fiction, drafting may invent details within the outline and established world rules. A prose cleanup must preserve plot events, character motives, chronology, and unresolved threads unless the requested revision changes them. For nonfiction and technical books, preserve factual claims, numbers, attributions, caveats, and prerequisite ordering; request missing evidence or leave the claim unresolved. Keep valid Markdown/LaTeX structure, equations, citations, and executable examples intact.
+
+### Workflow integration
+
+Review only the chapter being drafted or the section authorized for revision. Check sentence rhythm and paragraph structure, make the smallest useful edits, and compare the result with the pre-pass material for lost information or continuity changes. Recheck the final prose once for remaining mechanical patterns; avoid an indefinite polishing loop.
+
+Save only the final prose, then derive the summary, word count, and verbatim `ending_excerpt` from that saved version. Suggestions-only work returns proposed edits without saving chapter or project state. Metadata-only refresh skips prose cleanup. Format switching and export do not apply this pass or silently rewrite prose.
 
 ## Init Workflow
 
@@ -142,6 +166,7 @@ Use when the user wants a new chapter drafted.
 8. Write the chapter:
    - `latex`: start with `\chapter{Title}` and write valid chapter-level LaTeX only.
    - `markdown`: write plain Markdown without a top-level chapter heading.
+   - Apply the `Prose Quality Pass` above and save the final chapter before self-summarizing.
 9. Self-summarize into `.quill/summaries/ch-NN.json` using the summary schema from [schema.md](schema.md), including `chapter` and `ending_excerpt` (the final ~150 words, verbatim). For `actual_word_count`, run `python3 scripts/quill-stats.py` when shell execution is available; otherwise estimate from the drafted text.
 10. Update `quill.json` (small fields only — no prose, no summaries):
     - Update characters or concepts and `last_seen`
@@ -155,18 +180,18 @@ Use when the user wants a new chapter drafted.
 
 ## Revise Workflow
 
-Use when the user wants to improve an existing chapter or refresh metadata after manual edits.
+Use when the user wants to improve or humanize an existing chapter or refresh metadata after manual edits. Humanizing uses the same chapter selection, edit scope, and continuity tracking as other prose revisions.
 
 1. Read `quill.json`.
 2. Resolve the chapter path from the current format and read the full chapter.
 3. Read the existing summary file `.quill/summaries/ch-NN.json`. Keep the old values for the continuity diff in step 8.
 4. If this is not chapter 1, load the lightest continuity context that works: the previous written chapter's summary file, and its `ending_excerpt` if prose-level handoff matters.
-5. Offer one of these modes:
+5. Use the requested mode if already specified; otherwise offer one of these modes:
    - Suggest revisions only
    - Rewrite a section
    - Full rewrite
    - Metadata-only refresh
-6. Make the requested changes and save the chapter unless the user asked for suggestions only.
+6. Make the requested changes, applying the `Prose Quality Pass` within that scope before saving the final chapter. For suggestions only, report proposed edits and stop without changing files or metadata. For metadata-only refresh, leave the chapter unchanged and proceed to step 7.
 7. Re-summarize the revised chapter into `.quill/summaries/ch-NN.json`, refreshing every field including `ending_excerpt` and `actual_word_count` (via `quill-stats.py` when available).
 8. Compare old and new summaries to detect continuity impact:
    - Characters added, removed, or materially changed

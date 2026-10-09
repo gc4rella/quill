@@ -16,7 +16,7 @@ In Claude Code, prefer the `/quill:*` slash commands when the user invokes them.
 
 - Start a new project or initialize Quill -> `Init Workflow`
 - Write a chapter -> `Write Workflow`
-- Revise a chapter -> `Revise Workflow`
+- Revise or humanize a chapter -> `Revise Workflow`
 - Inspect progress -> `Status Workflow`
 - Edit or extend the outline -> `Outline Workflow`
 - Manage threads -> `Threads Workflow`
@@ -25,6 +25,10 @@ In Claude Code, prefer the `/quill:*` slash commands when the user invokes them.
 - Assemble or convert the manuscript -> `Export Workflow`
 
 Load only the workflow section needed for the current request. `references/workflows.md` is the canonical spec on every platform.
+
+## Prose Quality Contract
+
+For chapter drafting and prose revision, apply the shared **Prose Quality Pass** in [`references/workflows.md`](references/workflows.md) before self-summarization. The author's instructions and `style_fingerprint` govern voice; humanizing must preserve meaning, continuity, and the requested edit scope. This pass uses only the active draft or revision material and does not authorize additional chapter reads. It requires no separately installed humanizer skill.
 
 ---
 
